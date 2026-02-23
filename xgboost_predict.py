@@ -13,7 +13,7 @@ with open("model_registry/latest.json") as f:
 
 version      = latest["version"]
 model        = joblib.load(latest["model_path"])
-preprocessor = joblib.load(f"model_registry/preprocessor_{version}.joblib")
+preprocessor = joblib.load(latest["preprocessor_path"])
 
 with open(f"model_registry/metadata_{version}.json") as f:
     metadata = json.load(f)
@@ -28,7 +28,7 @@ print(f"Trained ROC-AUC: {metadata['roc_auc']}")
 # Higher threshold = more conservative = fewer approvals but fewer defaults.
 # Lower threshold = more approvals but more defaults.
 # Tune this based on business feedback after deployment.
-APPROVAL_THRESHOLD = 0.6
+APPROVAL_THRESHOLD = 0.5
 
 # ── 3. OFFER SELECTION LOGIC ─────────────────────────────────────────────────
 # Offers available to approved applicants.

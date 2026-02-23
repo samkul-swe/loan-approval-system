@@ -1,0 +1,5 @@
+{
+  "version": "20260224_002624",
+  "model_path": "model_registry/xgb_model_20260224_002624.joblib",
+  "preprocessor_path": "model_registry/preprocessor_20260224_002624.joblib"
+}

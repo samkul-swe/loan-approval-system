@@ -1,0 +1,21 @@
+{
+  "version": "20260224_001342",
+  "roc_auc": 0.6421,
+  "best_iteration": 299,
+  "features": [
+    "dti",
+    "revol_util",
+    "pub_rec",
+    "annual_inc",
+    "emp_length",
+    "open_acc",
+    "mort_acc",
+    "credit_history_years",
+    "revol_bal",
+    "home_ownership"
+  ],
+  "train_size": 316824,
+  "test_size": 79206,
+  "scale_pos_weight": 12.3,
+  "trained_at": "2026-02-24T00:13:42.353458"
+}
