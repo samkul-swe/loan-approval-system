@@ -1,0 +1,23 @@
+{
+  "version": "20260224_220212",
+  "roc_auc": 0.9497,
+  "best_iteration": 299,
+  "features": [
+    "dti",
+    "revol_util",
+    "pub_rec",
+    "annual_inc",
+    "emp_length",
+    "open_acc",
+    "mort_acc",
+    "credit_history_years",
+    "revol_bal",
+    "home_ownership"
+  ],
+  "train_size": 124276,
+  "test_size": 31070,
+  "confident_repaid": 77673,
+  "confident_declined": 77673,
+  "ambiguous_excluded": 240684,
+  "trained_at": "2026-02-24T22:02:12.585451"
+}
