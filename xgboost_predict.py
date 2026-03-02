@@ -3,7 +3,14 @@ import numpy as np
 import joblib
 import json
 import shap
+import uuid
+import xgboost as xgb
 from datetime import datetime
+from sklearn.compose import ColumnTransformer
+from sklearn.preprocessing import OrdinalEncoder
+from sklearn.impute import SimpleImputer
+from sklearn.pipeline import Pipeline
+from borderline_budget import try_approve_borderline
 
 # ── 1. LOAD LATEST MODEL ──────────────────────────────────────────────────────
 with open("model_registry/latest.json") as f:
@@ -19,7 +26,48 @@ with open(f"model_registry/metadata_{version}.json") as f:
 print(f"Loaded model version: {version}")
 print(f"Trained ROC-AUC: {metadata['roc_auc']}")
 
-APPROVAL_THRESHOLD = 0.50
+APPROVAL_THRESHOLD      = 0.50
+REPAID_MODEL_THRESHOLD  = 0.50
+
+# ── REPAID MODEL ──────────────────────────────────────────────────────────────
+# Rebuilt on startup — lightweight, fast
+def _build_repaid_model(main_model, main_preprocessor, all_features, all_num, cat_features):
+    df = pd.read_csv("lending_club_clean.csv")
+    repaid_only = df[df["target"] == 1][all_features].copy()
+    repaid_only["repaid_prob"] = main_model.predict_proba(
+        main_preprocessor.transform(repaid_only)
+    )[:, 1]
+    median_prob = repaid_only["repaid_prob"].median()
+    repaid_only["repaid_label"] = (repaid_only["repaid_prob"] >= median_prob).astype(int)
+
+    rp = ColumnTransformer([
+        ("num", Pipeline([("imputer", SimpleImputer(strategy="median"))]), all_num),
+        ("cat", Pipeline([
+            ("imputer", SimpleImputer(strategy="most_frequent")),
+            ("encoder", OrdinalEncoder(handle_unknown="use_encoded_value", unknown_value=-1))
+        ]), cat_features)
+    ], remainder="drop")
+
+    X_proc = rp.fit_transform(repaid_only[all_features])
+    rm     = xgb.XGBClassifier(
+        max_depth=4, n_estimators=200, learning_rate=0.05,
+        gamma=1, subsample=0.8, colsample_bytree=0.8,
+        eval_metric="auc", random_state=42, n_jobs=-1
+    )
+    rm.fit(X_proc, repaid_only["repaid_label"], verbose=False)
+    return rm, rp
+
+print("Building repaid model...")
+strong_num   = ["dti", "revol_util", "pub_rec", "annual_inc"]
+support_num  = ["emp_length", "open_acc", "mort_acc", "credit_history_years", "revol_bal"]
+cat_features = ["home_ownership"]
+all_num      = strong_num + support_num
+all_features = all_num + cat_features
+
+repaid_model, repaid_preprocessor = _build_repaid_model(
+    model, preprocessor, all_features, all_num, cat_features
+)
+print("Repaid model ready.")
 
 OFFERS = {
     "A": {"amount": 500,  "term_months": 6,  "apr": 0.09},
@@ -220,10 +268,19 @@ def decide(applicant: dict) -> dict:
 
 # ── 4. EXAMPLE USAGE ──────────────────────────────────────────────────────────
 if __name__ == "__main__":
+    from borderline_budget import reset_budget, print_budget_status
+    reset_budget(10000.00)
+
     good_applicant = {
         "dti": 12.5, "revol_util": 18.0, "pub_rec": 0, "annual_inc": 85000,
         "emp_length": 7, "open_acc": 8, "mort_acc": 1,
         "credit_history_years": 12.0, "revol_bal": 3200, "home_ownership": "MORTGAGE"
+    }
+
+    borderline_applicant = {
+        "dti": 16.0, "revol_util": 58.0, "pub_rec": 0, "annual_inc": 68000,
+        "emp_length": 5, "open_acc": 11, "mort_acc": 1,
+        "credit_history_years": 15.0, "revol_bal": 13000, "home_ownership": "RENT"
     }
 
     risky_applicant = {
@@ -232,8 +289,23 @@ if __name__ == "__main__":
         "credit_history_years": 3.0, "revol_bal": 18000, "home_ownership": "RENT"
     }
 
-    for label, applicant in [("Strong applicant", good_applicant), ("Risky applicant", risky_applicant)]:
+    # ── DEBUG: check repaid score for borderline applicant ───────────────────
+    X_test       = pd.DataFrame([borderline_applicant])[all_features]
+    debug_score  = repaid_model.predict_proba(repaid_preprocessor.transform(X_test))[0][1]
+    debug_prob   = model.predict_proba(preprocessor.transform(X_test))[0][1]
+    print(f"Borderline applicant — main_prob: {debug_prob:.4f}  repaid_score: {debug_score:.4f}")
+
+    for label, applicant in [
+        ("Clear approve",      good_applicant),
+        ("Borderline",         borderline_applicant),
+        ("Clear decline",      risky_applicant),
+    ]:
         print(f"\n\n{'#'*65}")
         print(f"  {label}")
         print(f"{'#'*65}")
         decide(applicant)
+
+    print(f"\n\n{'#'*65}")
+    print(f"  Budget Status")
+    print(f"{'#'*65}")
+    print_budget_status()
