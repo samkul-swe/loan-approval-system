@@ -1,0 +1,145 @@
+
+
+#################################################################
+  Tier 1 — Clear Good
+#################################################################
+
+=================================================================
+  ID: 5b98568e  |  Tier 1: Clear Good
+  Decision: APPROVED   (Repay prob: 0.9983)
+  Model version: 20260303_004342  |  2026-03-03T00:53:59.880531
+=================================================================
+
+  Confidence Narrative:
+
+  Feature                     Impact    Confidence  Note
+  ------------------------- --------    ----------  -----------------------------------
+  Base confidence                            49.9%  Starting point
+  ✓ dti                       +46.8%  →     96.7%  Low debt-to-income ratio of 12.5% — manageable existing debt load
+  ✓ revol_util                 +2.9%  →     99.7%  Low credit utilisation of 18.0% — not over-relying on available credit
+  ✗ credit_history_years       -1.2%  →     98.5%  Short credit history of 12.0 years — limited track record
+  ✓ home_ownership             +1.0%  →     99.4%  Home ownership status suggests financial stability
+  ✓ open_acc                   +0.3%  →     99.7%  Healthy number of open accounts (8) — manageable credit obligations
+  ✓ annual_inc                 +0.1%  →     99.8%  Strong annual income of $85,000 — good repayment capacity
+  ✗ emp_length                 -0.1%  →     99.7%  Short employment history of 7 year(s) — limited income stability
+  ✓ mort_acc                   +0.1%  →     99.8%  You have 1 mortgage account(s) — demonstrates prior lending trust
+  ✓ pub_rec                    +0.0%  →     99.9%  No derogatory public records — clean financial track record
+  ✗ revol_bal                  -0.0%  →     99.8%  High revolving balance of $3,200 — significant outstanding credit card debt
+  ------------------------- --------    ----------  -----------------------------------
+  Final confidence                           99.8%
+
+  Offer: D — $5000 over 36 months at 19% APR
+  Monthly payment: $183.28
+
+
+#################################################################
+  Tier 2 — Medium Good
+#################################################################
+
+=================================================================
+  ID: 8dd97db6  |  Tier 1: Clear Good
+  Decision: APPROVED   (Repay prob: 0.9997)
+  Model version: 20260303_004342  |  2026-03-03T00:53:59.964795
+=================================================================
+
+  Confidence Narrative:
+
+  Feature                     Impact    Confidence  Note
+  ------------------------- --------    ----------  -----------------------------------
+  Base confidence                            49.9%  Starting point
+  ✓ dti                       +46.2%  →     96.1%  Low debt-to-income ratio of 13.0% — manageable existing debt load
+  ✓ revol_util                 +3.1%  →     99.2%  Low credit utilisation of 38.0% — not over-relying on available credit
+  ✓ home_ownership             +0.6%  →     99.8%  Home ownership status suggests financial stability
+  ✓ annual_inc                 +0.1%  →     99.9%  Strong annual income of $78,000 — good repayment capacity
+  ✓ open_acc                   +0.1%  →     99.9%  Healthy number of open accounts (9) — manageable credit obligations
+  ✓ mort_acc                   +0.0%  →    100.0%  You have 2 mortgage account(s) — demonstrates prior lending trust
+  ✗ emp_length                 -0.0%  →     99.9%  Short employment history of 7 year(s) — limited income stability
+  ✓ pub_rec                    +0.0%  →    100.0%  No derogatory public records — clean financial track record
+  ✓ revol_bal                  +0.0%  →    100.0%  Low revolving balance of $9,000 — limited outstanding credit card debt
+  ✗ credit_history_years       -0.0%  →    100.0%  Short credit history of 16.0 years — limited track record
+  ------------------------- --------    ----------  -----------------------------------
+  Final confidence                          100.0%
+
+  Offer: D — $5000 over 36 months at 19% APR
+  Monthly payment: $183.28
+
+
+#################################################################
+  Tier 3 — Medium Okay
+#################################################################
+
+=================================================================
+  ID: 57355c98  |  Tier 1: Clear Good
+  Decision: APPROVED   (Repay prob: 0.5452)
+  Model version: 20260303_004342  |  2026-03-03T00:54:00.044481
+=================================================================
+
+  Confidence Narrative:
+
+  Feature                     Impact    Confidence  Note
+  ------------------------- --------    ----------  -----------------------------------
+  Base confidence                            49.9%  Starting point
+  ✗ credit_history_years      -47.0%  →      2.9%  Short credit history of 10.0 years — limited track record
+  ✓ dti                       +13.6%  →     16.5%  Low debt-to-income ratio of 19.0% — manageable existing debt load
+  ✓ revol_util                +12.1%  →     28.6%  Low credit utilisation of 58.0% — not over-relying on available credit
+  ✓ emp_length                +13.2%  →     41.8%  Stable employment of 4 year(s) — consistent income source
+  ✗ home_ownership            -10.3%  →     31.5%  Home ownership status raises some concern
+  ✓ pub_rec                    +7.7%  →     39.2%  No derogatory public records — clean financial track record
+  ✓ revol_bal                  +8.3%  →     47.5%  Low revolving balance of $13,000 — limited outstanding credit card debt
+  ✓ annual_inc                 +6.4%  →     54.0%  Strong annual income of $55,000 — good repayment capacity
+  ✓ open_acc                   +5.4%  →     59.4%  Healthy number of open accounts (11) — manageable credit obligations
+  ✗ mort_acc                   -4.9%  →     54.5%  No mortgage accounts — limited evidence of prior lending trust
+  ------------------------- --------    ----------  -----------------------------------
+  Final confidence                           54.5%
+
+  Offer: A — $500 over 6 months at 9% APR
+  Monthly payment: $85.53
+
+
+#################################################################
+  Tier 4 — Clear Bad
+#################################################################
+
+=================================================================
+  ID: 18553a53  |  Tier 4: Clear Bad
+  Decision: DECLINED   (Repay prob: 0.0168)  |  Distance score: 0.2146
+  Model version: 20260303_004342  |  2026-03-03T00:54:00.127501
+=================================================================
+
+  Confidence Narrative:
+
+  Feature                     Impact    Confidence  Note
+  ------------------------- --------    ----------  -----------------------------------
+  Base confidence                            49.9%  Starting point
+  ✗ credit_history_years      -26.7%  →     23.2%  Short credit history of 3.0 years — limited track record
+  ✗ pub_rec                   -12.9%  →     10.3%  2 derogatory public record(s) — negative financial history
+  ✗ dti                        -6.1%  →      4.2%  High debt-to-income ratio of 38.0% — too much income already committed
+  ✗ revol_util                 -1.7%  →      2.5%  High credit utilisation of 82.0% — over-relying on available credit
+  ✓ emp_length                 +1.4%  →      3.9%  Stable employment of 1 year(s) — consistent income source
+  ✗ annual_inc                 -1.2%  →      2.7%  Annual income of $32,000 may be insufficient given existing obligations
+  ✗ home_ownership             -0.8%  →      1.9%  Home ownership status raises some concern
+  ✓ revol_bal                  +0.4%  →      2.3%  Low revolving balance of $18,000 — limited outstanding credit card debt
+  ✗ open_acc                   -0.4%  →      1.9%  High number of open accounts (14) — many active credit obligations
+  ✗ mort_acc                   -0.2%  →      1.7%  No mortgage accounts — limited evidence of prior lending trust
+  ------------------------- --------    ----------  -----------------------------------
+  Final confidence                            1.7%
+
+  Decline Reasons:
+  1. Short credit history of 3.0 years — limited track record
+  2. 2 derogatory public record(s) — negative financial history
+  3. High debt-to-income ratio of 38.0% — too much income already committed
+
+
+#################################################################
+  Budget Status
+#################################################################
+
+── Tier 3 Budget Status ──
+Total budget:       $ 10,000.00
+Deployed:           $      0.00
+Remaining:          $ 10,000.00
+Repaid so far:      $      0.00
+Defaulted so far:   $      0.00
+Approved:                    0
+On waitlist:                 0
+Last updated:       2026-03-03T00:53:59.822230
