@@ -1,0 +1,17 @@
+{
+  "best_params": {
+    "max_depth": 6,
+    "learning_rate": 0.08472091917654598,
+    "n_estimators": 350,
+    "gamma": 0.05303134188192615,
+    "subsample": 0.9719839105119004,
+    "colsample_bytree": 0.9522817551122009,
+    "min_child_weight": 7,
+    "reg_lambda": 6.085810362807613,
+    "reg_alpha": 3.1990956669173825
+  },
+  "val_auc": 0.9737,
+  "test_auc": 0.9737,
+  "n_trials": 100,
+  "tuned_at": "2026-03-05T22:18:02.580975"
+}

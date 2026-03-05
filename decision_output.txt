@@ -5,31 +5,45 @@
 #################################################################
 
 =================================================================
-  ID: 5b98568e  |  Tier 1: Clear Good
-  Decision: APPROVED   (Repay prob: 0.9983)
-  Model version: 20260303_004342  |  2026-03-03T00:53:59.880531
+  ID: 3a0829ce  |  Tier 3: Medium Okay
+  Decision: APPROVED   (Repay prob: 0.8664)  |  Distance score: 0.7470
+  Model version: 20260305_222037  |  2026-03-05T22:59:27.465845
 =================================================================
 
   Confidence Narrative:
 
   Feature                     Impact    Confidence  Note
   ------------------------- --------    ----------  -----------------------------------
-  Base confidence                            49.9%  Starting point
-  ✓ dti                       +46.8%  →     96.7%  Low debt-to-income ratio of 12.5% — manageable existing debt load
-  ✓ revol_util                 +2.9%  →     99.7%  Low credit utilisation of 18.0% — not over-relying on available credit
-  ✗ credit_history_years       -1.2%  →     98.5%  Short credit history of 12.0 years — limited track record
-  ✓ home_ownership             +1.0%  →     99.4%  Home ownership status suggests financial stability
-  ✓ open_acc                   +0.3%  →     99.7%  Healthy number of open accounts (8) — manageable credit obligations
-  ✓ annual_inc                 +0.1%  →     99.8%  Strong annual income of $85,000 — good repayment capacity
-  ✗ emp_length                 -0.1%  →     99.7%  Short employment history of 7 year(s) — limited income stability
-  ✓ mort_acc                   +0.1%  →     99.8%  You have 1 mortgage account(s) — demonstrates prior lending trust
-  ✓ pub_rec                    +0.0%  →     99.9%  No derogatory public records — clean financial track record
-  ✗ revol_bal                  -0.0%  →     99.8%  High revolving balance of $3,200 — significant outstanding credit card debt
+  Base confidence                            49.7%  Starting point
+  ✓ dti                       +48.4%  →     98.0%  Low debt-to-income ratio of 12.5% — manageable existing debt load
+  ✓ revol_util                 +1.7%  →     99.8%  Low credit utilisation of 18.0% — not over-relying on available credit
+  ✓ home_ownership             +0.1%  →     99.9%  Home ownership status suggests financial stability
+  ✗ credit_utilization_pressure    -0.1%  →     99.8%  Revolving debt is 3.8% of annual income — manageable but noted
+  ✓ annual_inc                 +0.1%  →     99.9%  Strong annual income of $85,000 — good repayment capacity
+  ✓ open_acc                   +0.0%  →    100.0%  Healthy number of open accounts (8) — manageable credit obligations
+  ✓ mort_acc                   +0.0%  →    100.0%  You have 1 mortgage account(s) — demonstrates prior lending trust
+  ✓ debt_burden                +0.0%  →    100.0%  Monthly debt burden of $885 is manageable relative to income
+  ✓ pub_rec                    +0.0%  →    100.0%  No derogatory public records — clean financial track record
+  ✗ revol_bal                  -0.0%  →    100.0%  High revolving balance of $3,200 — significant outstanding credit card debt
+  ✗ emp_length                 -0.0%  →    100.0%  Short employment history of 7 year(s) — limited income stability
+  ✓ credit_history_years       +0.0%  →    100.0%  Long credit history of 12.0 years — established track record
+  ✓ high_dti_low_income        +0.0%  →    100.0%  Debt load is reasonable given income level
+  ✓ has_public_record          +0.0%  →    100.0%  No derogatory public records on file — clean financial history
   ------------------------- --------    ----------  -----------------------------------
-  Final confidence                           99.8%
+  Final confidence                          100.0%
 
-  Offer: D — $5000 over 36 months at 19% APR
-  Monthly payment: $183.28
+  Approved as Tier 3 trial loan — $500 at 9% APR over 6 months. Budget remaining: $9,500.00
+
+  Distance from defaulter breakdown:
+  ✓ dti                       yours:      12.50  defaulter avg:      21.74
+  ✓ revol_util                yours:      18.00  defaulter avg:      63.30
+  ✓ pub_rec                   yours:       0.00  defaulter avg:       0.28
+  ✓ annual_inc                yours:   85000.00  defaulter avg:   57000.00
+  ✓ emp_length                yours:       7.00  defaulter avg:       5.68
+  ✓ open_acc                  yours:       8.00  defaulter avg:      11.53
+  ✗ mort_acc                  yours:       1.00  defaulter avg:       1.19
+  ✗ credit_history_years      yours:      12.00  defaulter avg:      20.50
+  ✓ revol_bal                 yours:    3200.00  defaulter avg:   14917.00
 
 
 #################################################################
@@ -37,26 +51,30 @@
 #################################################################
 
 =================================================================
-  ID: 8dd97db6  |  Tier 1: Clear Good
-  Decision: APPROVED   (Repay prob: 0.9997)
-  Model version: 20260303_004342  |  2026-03-03T00:53:59.964795
+  ID: bb557991  |  Tier 1: Clear Good
+  Decision: APPROVED   (Repay prob: 0.9341)
+  Model version: 20260305_222037  |  2026-03-05T22:59:27.556405
 =================================================================
 
   Confidence Narrative:
 
   Feature                     Impact    Confidence  Note
   ------------------------- --------    ----------  -----------------------------------
-  Base confidence                            49.9%  Starting point
-  ✓ dti                       +46.2%  →     96.1%  Low debt-to-income ratio of 13.0% — manageable existing debt load
-  ✓ revol_util                 +3.1%  →     99.2%  Low credit utilisation of 38.0% — not over-relying on available credit
-  ✓ home_ownership             +0.6%  →     99.8%  Home ownership status suggests financial stability
-  ✓ annual_inc                 +0.1%  →     99.9%  Strong annual income of $78,000 — good repayment capacity
-  ✓ open_acc                   +0.1%  →     99.9%  Healthy number of open accounts (9) — manageable credit obligations
+  Base confidence                            49.7%  Starting point
+  ✓ dti                       +47.8%  →     97.5%  Low debt-to-income ratio of 13.0% — manageable existing debt load
+  ✓ revol_util                 +2.0%  →     99.5%  Low credit utilisation of 38.0% — not over-relying on available credit
+  ✓ home_ownership             +0.3%  →     99.9%  Home ownership status suggests financial stability
+  ✓ annual_inc                 +0.1%  →    100.0%  Strong annual income of $78,000 — good repayment capacity
+  ✓ open_acc                   +0.0%  →    100.0%  Healthy number of open accounts (9) — manageable credit obligations
+  ✓ credit_history_years       +0.0%  →    100.0%  Long credit history of 16.0 years — established track record
   ✓ mort_acc                   +0.0%  →    100.0%  You have 2 mortgage account(s) — demonstrates prior lending trust
-  ✗ emp_length                 -0.0%  →     99.9%  Short employment history of 7 year(s) — limited income stability
+  ✓ credit_utilization_pressure    +0.0%  →    100.0%  Revolving debt is 11.5% of annual income — not over-extended
   ✓ pub_rec                    +0.0%  →    100.0%  No derogatory public records — clean financial track record
   ✓ revol_bal                  +0.0%  →    100.0%  Low revolving balance of $9,000 — limited outstanding credit card debt
-  ✗ credit_history_years       -0.0%  →    100.0%  Short credit history of 16.0 years — limited track record
+  ✓ debt_burden                +0.0%  →    100.0%  Monthly debt burden of $845 is manageable relative to income
+  ✗ emp_length                 -0.0%  →    100.0%  Short employment history of 7 year(s) — limited income stability
+  ✓ high_dti_low_income        +0.0%  →    100.0%  Debt load is reasonable given income level
+  ✓ has_public_record          +0.0%  →    100.0%  No derogatory public records on file — clean financial history
   ------------------------- --------    ----------  -----------------------------------
   Final confidence                          100.0%
 
@@ -69,31 +87,45 @@
 #################################################################
 
 =================================================================
-  ID: 57355c98  |  Tier 1: Clear Good
-  Decision: APPROVED   (Repay prob: 0.5452)
-  Model version: 20260303_004342  |  2026-03-03T00:54:00.044481
+  ID: e6975e90  |  Tier 3: Medium Okay
+  Decision: APPROVED   (Repay prob: 0.8353)  |  Distance score: 0.5235
+  Model version: 20260305_222037  |  2026-03-05T22:59:27.610027
 =================================================================
 
   Confidence Narrative:
 
   Feature                     Impact    Confidence  Note
   ------------------------- --------    ----------  -----------------------------------
-  Base confidence                            49.9%  Starting point
-  ✗ credit_history_years      -47.0%  →      2.9%  Short credit history of 10.0 years — limited track record
-  ✓ dti                       +13.6%  →     16.5%  Low debt-to-income ratio of 19.0% — manageable existing debt load
-  ✓ revol_util                +12.1%  →     28.6%  Low credit utilisation of 58.0% — not over-relying on available credit
-  ✓ emp_length                +13.2%  →     41.8%  Stable employment of 4 year(s) — consistent income source
-  ✗ home_ownership            -10.3%  →     31.5%  Home ownership status raises some concern
-  ✓ pub_rec                    +7.7%  →     39.2%  No derogatory public records — clean financial track record
-  ✓ revol_bal                  +8.3%  →     47.5%  Low revolving balance of $13,000 — limited outstanding credit card debt
-  ✓ annual_inc                 +6.4%  →     54.0%  Strong annual income of $55,000 — good repayment capacity
-  ✓ open_acc                   +5.4%  →     59.4%  Healthy number of open accounts (11) — manageable credit obligations
-  ✗ mort_acc                   -4.9%  →     54.5%  No mortgage accounts — limited evidence of prior lending trust
+  Base confidence                            49.7%  Starting point
+  ✓ dti                       +46.1%  →     95.8%  Low debt-to-income ratio of 19.0% — manageable existing debt load
+  ✓ revol_util                 +2.9%  →     98.7%  Low credit utilisation of 58.0% — not over-relying on available credit
+  ✓ credit_utilization_pressure    +0.6%  →     99.3%  Revolving debt is 23.6% of annual income — not over-extended
+  ✓ emp_length                 +0.3%  →     99.6%  Stable employment of 4 year(s) — consistent income source
+  ✗ home_ownership             -0.3%  →     99.4%  Home ownership status raises some concern
+  ✓ annual_inc                 +0.3%  →     99.6%  Strong annual income of $55,000 — good repayment capacity
+  ✓ pub_rec                    +0.1%  →     99.8%  No derogatory public records — clean financial track record
+  ✓ open_acc                   +0.1%  →     99.9%  Healthy number of open accounts (11) — manageable credit obligations
+  ✓ revol_bal                  +0.0%  →     99.9%  Low revolving balance of $13,000 — limited outstanding credit card debt
+  ✗ mort_acc                   -0.0%  →     99.9%  No mortgage accounts — limited evidence of prior lending trust
+  ✓ debt_burden                +0.0%  →     99.9%  Monthly debt burden of $871 is manageable relative to income
+  ✓ has_public_record          +0.0%  →     99.9%  No derogatory public records on file — clean financial history
+  ✓ credit_history_years       +0.0%  →     99.9%  Long credit history of 10.0 years — established track record
+  ✓ high_dti_low_income        +0.0%  →     99.9%  Debt load is reasonable given income level
   ------------------------- --------    ----------  -----------------------------------
-  Final confidence                           54.5%
+  Final confidence                           99.9%
 
-  Offer: A — $500 over 6 months at 9% APR
-  Monthly payment: $85.53
+  Approved as Tier 3 trial loan — $350 at 9% APR over 6 months. Budget remaining: $9,150.00
+
+  Distance from defaulter breakdown:
+  ✓ dti                       yours:      19.00  defaulter avg:      21.74
+  ✓ revol_util                yours:      58.00  defaulter avg:      63.30
+  ✓ pub_rec                   yours:       0.00  defaulter avg:       0.28
+  ✗ annual_inc                yours:   55000.00  defaulter avg:   57000.00
+  ✗ emp_length                yours:       4.00  defaulter avg:       5.68
+  ✓ open_acc                  yours:      11.00  defaulter avg:      11.53
+  ✗ mort_acc                  yours:       0.00  defaulter avg:       1.19
+  ✗ credit_history_years      yours:      10.00  defaulter avg:      20.50
+  ✓ revol_bal                 yours:   13000.00  defaulter avg:   14917.00
 
 
 #################################################################
@@ -101,33 +133,37 @@
 #################################################################
 
 =================================================================
-  ID: 18553a53  |  Tier 4: Clear Bad
-  Decision: DECLINED   (Repay prob: 0.0168)  |  Distance score: 0.2146
-  Model version: 20260303_004342  |  2026-03-03T00:54:00.127501
+  ID: e2bc2383  |  Tier 4: Clear Bad
+  Decision: DECLINED   (Repay prob: 0.5200)  |  Distance score: 0.2146
+  Model version: 20260305_222037  |  2026-03-05T22:59:27.674088
 =================================================================
 
   Confidence Narrative:
 
   Feature                     Impact    Confidence  Note
   ------------------------- --------    ----------  -----------------------------------
-  Base confidence                            49.9%  Starting point
-  ✗ credit_history_years      -26.7%  →     23.2%  Short credit history of 3.0 years — limited track record
-  ✗ pub_rec                   -12.9%  →     10.3%  2 derogatory public record(s) — negative financial history
-  ✗ dti                        -6.1%  →      4.2%  High debt-to-income ratio of 38.0% — too much income already committed
-  ✗ revol_util                 -1.7%  →      2.5%  High credit utilisation of 82.0% — over-relying on available credit
-  ✓ emp_length                 +1.4%  →      3.9%  Stable employment of 1 year(s) — consistent income source
-  ✗ annual_inc                 -1.2%  →      2.7%  Annual income of $32,000 may be insufficient given existing obligations
-  ✗ home_ownership             -0.8%  →      1.9%  Home ownership status raises some concern
-  ✓ revol_bal                  +0.4%  →      2.3%  Low revolving balance of $18,000 — limited outstanding credit card debt
-  ✗ open_acc                   -0.4%  →      1.9%  High number of open accounts (14) — many active credit obligations
-  ✗ mort_acc                   -0.2%  →      1.7%  No mortgage accounts — limited evidence of prior lending trust
+  Base confidence                            49.7%  Starting point
+  ✗ dti                       -34.1%  →     15.6%  High debt-to-income ratio of 38.0% — too much income already committed
+  ✗ pub_rec                   -10.6%  →      5.0%  2 derogatory public record(s) — negative financial history
+  ✗ credit_history_years       -3.1%  →      1.9%  Short credit history of 3.0 years — limited track record
+  ✗ revol_util                 -0.6%  →      1.2%  High credit utilisation of 82.0% — over-relying on available credit
+  ✗ home_ownership             -0.4%  →      0.8%  Home ownership status raises some concern
+  ✓ emp_length                 +0.4%  →      1.2%  Stable employment of 1 year(s) — consistent income source
+  ✗ annual_inc                 -0.3%  →      0.9%  Annual income of $32,000 may be insufficient given existing obligations
+  ✗ open_acc                   -0.1%  →      0.8%  High number of open accounts (14) — many active credit obligations
+  ✗ mort_acc                   -0.1%  →      0.7%  No mortgage accounts — limited evidence of prior lending trust
+  ✗ debt_burden                -0.1%  →      0.6%  Monthly debt burden of $1,013 is high relative to income
+  ✗ credit_utilization_pressure    -0.1%  →      0.5%  Revolving debt is 56.2% of annual income — over-extended on credit
+  ✓ revol_bal                  +0.1%  →      0.6%  Low revolving balance of $18,000 — limited outstanding credit card debt
+  ✓ high_dti_low_income        +0.0%  →      0.6%  Debt load is reasonable given income level
+  ✗ has_public_record          -0.0%  →      0.6%  Has at least one derogatory public record — negative financial history
   ------------------------- --------    ----------  -----------------------------------
-  Final confidence                            1.7%
+  Final confidence                            0.6%
 
   Decline Reasons:
-  1. Short credit history of 3.0 years — limited track record
+  1. High debt-to-income ratio of 38.0% — too much income already committed
   2. 2 derogatory public record(s) — negative financial history
-  3. High debt-to-income ratio of 38.0% — too much income already committed
+  3. Short credit history of 3.0 years — limited track record
 
 
 #################################################################
@@ -136,10 +172,10 @@
 
 ── Tier 3 Budget Status ──
 Total budget:       $ 10,000.00
-Deployed:           $      0.00
-Remaining:          $ 10,000.00
+Deployed:           $    850.00
+Remaining:          $  9,150.00
 Repaid so far:      $      0.00
 Defaulted so far:   $      0.00
-Approved:                    0
+Approved:                    2
 On waitlist:                 0
-Last updated:       2026-03-03T00:53:59.822230
+Last updated:       2026-03-05T22:59:27.610221

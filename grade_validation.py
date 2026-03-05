@@ -34,9 +34,11 @@ from datetime import datetime
 import numpy as np
 
 strong_num   = ["dti", "revol_util", "pub_rec", "annual_inc"]
+engineered   = ["debt_burden", "credit_utilization_pressure",
+                "has_public_record", "high_dti_low_income"]
 support_num  = ["emp_length", "open_acc", "mort_acc", "credit_history_years", "revol_bal"]
 cat_features = ["home_ownership"]
-all_num      = strong_num + support_num
+all_num      = strong_num + engineered + support_num
 all_features = all_num + cat_features
 
 # Engineer credit_history_years from earliest_cr_line
@@ -60,14 +62,31 @@ emp_map = {
 }
 df_raw["emp_length"] = df_raw["emp_length"].map(emp_map)
 
-# ── 4. SCORE ALL APPLICANTS ───────────────────────────────────────────────────
+# ── 5. ENGINEERED FEATURES ───────────────────────────────────────────────────
+df_raw["debt_burden"]                 = (df_raw["dti"] / 100) * df_raw["annual_inc"] / 12
+df_raw["credit_utilization_pressure"] = df_raw["revol_bal"] / (df_raw["annual_inc"] + 1)
+df_raw["has_public_record"]           = (df_raw["pub_rec"] > 0).astype(int)
+df_raw["high_dti_low_income"]         = (
+    (df_raw["dti"] > 30) & (df_raw["annual_inc"] < 50000)
+).astype(int)
+
+# ── 6. SCORE ALL APPLICANTS ───────────────────────────────────────────────────
+APPROVAL_THRESHOLD = 0.87   # Must match xgboost_predict.py
+
 print("Scoring all applicants...")
 X         = df_raw[all_features]
 X_proc    = preprocessor.transform(X)
-probs     = model.predict_proba(X_proc)[:, 1]
+
+# Load calibrated model if available
+if "calibrated_model_path" in latest:
+    from sklearn.calibration import CalibratedClassifierCV
+    cal_model = joblib.load(latest["calibrated_model_path"])
+    probs     = cal_model.predict_proba(X_proc)[:, 1]
+else:
+    probs     = model.predict_proba(X_proc)[:, 1]
 
 df_raw["repay_prob"] = probs
-df_raw["approved"]   = (probs >= 0.50).astype(int)
+df_raw["approved"]   = (probs >= APPROVAL_THRESHOLD).astype(int)
 
 # ── 5. APPROVAL RATE BY GRADE ─────────────────────────────────────────────────
 print("── Approval Rate by Grade ──\n")
@@ -94,7 +113,7 @@ for grade in ["A", "B", "C", "D", "E", "F", "G"]:
     print(f"  {grade:>6} {total:>8,} {approved:>10,} {approval_pct:>10.1f}% "
           f"{repay_rate:>14.1f}% {default_rate:>12.1f}%")
 
-# ── 6. WHAT IS THE MODEL DECLINING WITHIN EACH GRADE ─────────────────────────
+# ── 8. WHAT IS THE MODEL DECLINING WITHIN EACH GRADE ─────────────────────────
 print(f"\n── Among Declined: Actual Repay Rate by Grade ──\n")
 print(f"  {'Grade':>6} {'Declined':>9} {'Actually Repaid':>16} {'Repay Rate':>12}")
 print(f"  {'-'*6} {'-'*9} {'-'*16} {'-'*12}")
@@ -108,7 +127,7 @@ for grade in ["A", "B", "C", "D", "E", "F", "G"]:
     repay_rate  = subset["target"].mean() * 100
     print(f"  {grade:>6} {declined:>9,} {act_repaid:>16,} {repay_rate:>11.1f}%")
 
-# ── 7. PLOT ───────────────────────────────────────────────────────────────────
+# ── 9. PLOT ───────────────────────────────────────────────────────────────────
 stats_df = pd.DataFrame(grade_stats)
 
 fig, axes = plt.subplots(1, 2, figsize=(14, 5))

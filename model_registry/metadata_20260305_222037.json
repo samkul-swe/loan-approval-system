@@ -1,0 +1,26 @@
+{
+  "version": "20260305_222037",
+  "roc_auc": 0.9741,
+  "best_iteration": 278,
+  "features": [
+    "dti",
+    "revol_util",
+    "pub_rec",
+    "annual_inc",
+    "debt_burden",
+    "credit_utilization_pressure",
+    "has_public_record",
+    "high_dti_low_income",
+    "emp_length",
+    "open_acc",
+    "mort_acc",
+    "credit_history_years",
+    "revol_bal",
+    "home_ownership"
+  ],
+  "train_size": 17102,
+  "test_size": 4276,
+  "n_defaulters": 10689,
+  "n_repaid_sampled": 10689,
+  "trained_at": "2026-03-05T22:20:37.680522"
+}

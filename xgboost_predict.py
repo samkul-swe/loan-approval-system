@@ -12,26 +12,80 @@ with open("model_registry/latest.json") as f:
     latest = json.load(f)
 
 version      = latest["version"]
-model        = joblib.load(latest["model_path"])
 preprocessor = joblib.load(latest["preprocessor_path"])
+
+# Load calibrated model if available, fall back to raw model
+if "calibrated_model_path" in latest:
+    model = joblib.load(latest["calibrated_model_path"])
+    print(f"Loaded calibrated model version: {version}")
+else:
+    model = joblib.load(latest["model_path"])
+    print(f"Loaded raw model version: {version} (no calibrated model found)")
 
 with open(f"model_registry/metadata_{version}.json") as f:
     metadata = json.load(f)
 
-print(f"Loaded model version: {version}")
-print(f"Trained ROC-AUC: {metadata['roc_auc']}")
-
 # ── 2. FEATURE SETUP ──────────────────────────────────────────────────────────
 strong_num   = ["dti", "revol_util", "pub_rec", "annual_inc"]
+engineered   = ["debt_burden", "credit_utilization_pressure",
+                "has_public_record", "high_dti_low_income"]
 support_num  = ["emp_length", "open_acc", "mort_acc", "credit_history_years", "revol_bal"]
 cat_features = ["home_ownership"]
-all_num      = strong_num + support_num
+all_num      = strong_num + engineered + support_num
 all_features = all_num + cat_features
 
 # ── 3. THRESHOLDS ─────────────────────────────────────────────────────────────
-APPROVAL_THRESHOLD       = 0.50   # Layer 1 — main model
-DISTANCE_TIER2_THRESHOLD = 0.75   # Layer 2 — medium good
-DISTANCE_TIER3_THRESHOLD = 0.40   # Layer 2 — medium okay (below = decline)
+APPROVAL_THRESHOLD       = 0.75
+REPAID_MODEL_THRESHOLD   = 0.50
+DISTANCE_TIER2_THRESHOLD = 0.75
+DISTANCE_TIER3_THRESHOLD = 0.40
+
+# ── 4. INPUT VALIDATION ───────────────────────────────────────────────────────
+REQUIRED_FIELDS = [
+    "dti", "revol_util", "pub_rec", "annual_inc", "debt_burden",
+    "credit_utilization_pressure", "has_public_record", "high_dti_low_income",
+    "emp_length", "open_acc", "mort_acc", "credit_history_years",
+    "revol_bal", "home_ownership"
+]
+
+VALID_RANGES = {
+    "dti":                          (0, 200),
+    "revol_util":                   (0, 200),
+    "pub_rec":                      (0, 50),
+    "annual_inc":                   (1000, 10000000),
+    "emp_length":                   (0, 10),
+    "open_acc":                     (0, 100),
+    "mort_acc":                     (0, 50),
+    "credit_history_years":         (0, 100),
+    "revol_bal":                    (0, 10000000),
+    "debt_burden":                  (0, 1000000),
+    "credit_utilization_pressure":  (0, 100),
+    "has_public_record":            (0, 1),
+    "high_dti_low_income":          (0, 1),
+}
+
+VALID_CATEGORIES = {
+    "home_ownership": ["RENT", "OWN", "MORTGAGE", "OTHER", "NONE", "ANY"]
+}
+
+def validate_applicant(applicant: dict) -> list:
+    errors = []
+    for field in REQUIRED_FIELDS:
+        if field not in applicant or applicant[field] is None:
+            errors.append(f"Missing required field: {field}")
+    for field, (min_val, max_val) in VALID_RANGES.items():
+        if field in applicant and applicant[field] is not None:
+            try:
+                val = float(applicant[field])
+                if val < min_val or val > max_val:
+                    errors.append(f"{field} value {val} is outside valid range [{min_val}, {max_val}]")
+            except (TypeError, ValueError):
+                errors.append(f"{field} must be a number, got: {applicant[field]}")
+    for field, valid_values in VALID_CATEGORIES.items():
+        if field in applicant and applicant[field] is not None:
+            if str(applicant[field]).upper() not in valid_values:
+                errors.append(f"{field} must be one of {valid_values}, got: {applicant[field]}")
+    return errors
 
 # ── 4. KNOWN DEFAULTER AVERAGES ───────────────────────────────────────────────
 # From our data analysis — average feature values of confirmed defaulters
@@ -159,29 +213,37 @@ def select_offer(tier: int, repay_prob: float,
 
 # ── 8. CONFIDENCE NARRATIVE TEMPLATES ────────────────────────────────────────
 POSITIVE_TEMPLATES = {
-    "dti":                  "Low debt-to-income ratio of {val:.1f}% — manageable existing debt load",
-    "revol_util":           "Low credit utilisation of {val:.1f}% — not over-relying on available credit",
-    "pub_rec":              "No derogatory public records — clean financial track record",
-    "annual_inc":           "Strong annual income of ${val:,.0f} — good repayment capacity",
-    "emp_length":           "Stable employment of {val:.0f} year(s) — consistent income source",
-    "open_acc":             "Healthy number of open accounts ({val:.0f}) — manageable credit obligations",
-    "mort_acc":             "You have {val:.0f} mortgage account(s) — demonstrates prior lending trust",
-    "credit_history_years": "Long credit history of {val:.1f} years — established track record",
-    "revol_bal":            "Low revolving balance of ${val:,.0f} — limited outstanding credit card debt",
-    "home_ownership":       "Home ownership status suggests financial stability",
+    "dti":                          "Low debt-to-income ratio of {val:.1f}% — manageable existing debt load",
+    "revol_util":                   "Low credit utilisation of {val:.1f}% — not over-relying on available credit",
+    "pub_rec":                      "No derogatory public records — clean financial track record",
+    "annual_inc":                   "Strong annual income of ${val:,.0f} — good repayment capacity",
+    "emp_length":                   "Stable employment of {val:.0f} year(s) — consistent income source",
+    "open_acc":                     "Healthy number of open accounts ({val:.0f}) — manageable credit obligations",
+    "mort_acc":                     "You have {val:.0f} mortgage account(s) — demonstrates prior lending trust",
+    "credit_history_years":         "Long credit history of {val:.1f} years — established track record",
+    "revol_bal":                    "Low revolving balance of ${val:,.0f} — limited outstanding credit card debt",
+    "home_ownership":               "Home ownership status suggests financial stability",
+    "debt_burden":                  "Monthly debt burden of ${val:,.0f} is manageable relative to income",
+    "credit_utilization_pressure":  "Revolving debt is {val:.1%} of annual income — not over-extended",
+    "has_public_record":            "No derogatory public records on file — clean financial history",
+    "high_dti_low_income":          "Debt load is reasonable given income level",
 }
 
 NEGATIVE_TEMPLATES = {
-    "dti":                  "High debt-to-income ratio of {val:.1f}% — too much income already committed",
-    "revol_util":           "High credit utilisation of {val:.1f}% — over-relying on available credit",
-    "pub_rec":              "{val:.0f} derogatory public record(s) — negative financial history",
-    "annual_inc":           "Annual income of ${val:,.0f} may be insufficient given existing obligations",
-    "emp_length":           "Short employment history of {val:.0f} year(s) — limited income stability",
-    "open_acc":             "High number of open accounts ({val:.0f}) — many active credit obligations",
-    "mort_acc":             "No mortgage accounts — limited evidence of prior lending trust",
-    "credit_history_years": "Short credit history of {val:.1f} years — limited track record",
-    "revol_bal":            "High revolving balance of ${val:,.0f} — significant outstanding credit card debt",
-    "home_ownership":       "Home ownership status raises some concern",
+    "dti":                          "High debt-to-income ratio of {val:.1f}% — too much income already committed",
+    "revol_util":                   "High credit utilisation of {val:.1f}% — over-relying on available credit",
+    "pub_rec":                      "{val:.0f} derogatory public record(s) — negative financial history",
+    "annual_inc":                   "Annual income of ${val:,.0f} may be insufficient given existing obligations",
+    "emp_length":                   "Short employment history of {val:.0f} year(s) — limited income stability" if True else "",
+    "open_acc":                     "High number of open accounts ({val:.0f}) — many active credit obligations",
+    "mort_acc":                     "No mortgage accounts — limited evidence of prior lending trust",
+    "credit_history_years":         "Short credit history of {val:.1f} years — limited track record",
+    "revol_bal":                    "High revolving balance of ${val:,.0f} — significant outstanding credit card debt",
+    "home_ownership":               "Home ownership status raises some concern",
+    "debt_burden":                  "Monthly debt burden of ${val:,.0f} is high relative to income",
+    "credit_utilization_pressure":  "Revolving debt is {val:.1%} of annual income — over-extended on credit",
+    "has_public_record":            "Has at least one derogatory public record — negative financial history",
+    "high_dti_low_income":          "Combination of high debt load and low income is a risk signal",
 }
 
 def build_confidence_narrative(shap_vals, feature_names, feature_values, base_log_odds):
@@ -216,9 +278,22 @@ def build_confidence_narrative(shap_vals, feature_names, feature_values, base_lo
 
         try:
             if shap_val > 0:
-                note = POSITIVE_TEMPLATES.get(feat, f"{feat} contributed positively").format(val=val)
+                if feat == "emp_length" and float(val) == 0:
+                    note = "No recorded employment history — income stability unknown"
+                elif feat == "credit_utilization_pressure":
+                    note = f"Revolving debt is {float(val):.1%} of annual income — not over-extended"
+                else:
+                    note = POSITIVE_TEMPLATES.get(feat, f"{feat} contributed positively").format(val=val)
             elif shap_val < 0:
-                note = NEGATIVE_TEMPLATES.get(feat, f"{feat} raised concern").format(val=val)
+                if feat == "emp_length" and float(val) == 0:
+                    note = "No recorded employment history — income stability is a concern"
+                elif feat == "credit_utilization_pressure":
+                    if float(val) < 0.30:
+                        note = f"Revolving debt is {float(val):.1%} of annual income — manageable but noted"
+                    else:
+                        note = f"Revolving debt is {float(val):.1%} of annual income — over-extended on credit"
+                else:
+                    note = NEGATIVE_TEMPLATES.get(feat, f"{feat} raised concern").format(val=val)
             else:
                 note = f"{feat} had negligible impact"
         except:
@@ -248,14 +323,44 @@ def decide(applicant: dict, applicant_id: str = None) -> dict:
     if applicant_id is None:
         applicant_id = str(uuid.uuid4())[:8]
 
+    # ── FAIL SAFE ─────────────────────────────────────────────────────────────
+    if model is None:
+        return {
+            "applicant_id": applicant_id,
+            "decision":     "DECLINED",
+            "tier":         0,
+            "tier_label":   "System Error",
+            "decline_reasons": [
+                "Our loan assessment system is temporarily unavailable.",
+                "Please try again shortly.",
+                "If this persists, contact ClearLend support."
+            ],
+            "model_version": "UNKNOWN",
+            "decided_at":    datetime.now().isoformat()
+        }
+
+    # ── INPUT VALIDATION ──────────────────────────────────────────────────────
+    errors = validate_applicant(applicant)
+    if errors:
+        return {
+            "applicant_id":    applicant_id,
+            "decision":        "ERROR",
+            "tier":            0,
+            "tier_label":      "Validation Error",
+            "validation_errors": errors,
+            "model_version":   version,
+            "decided_at":      datetime.now().isoformat()
+        }
+
     feature_names = metadata["features"]
     X_input       = pd.DataFrame([applicant])[feature_names]
     X_proc        = preprocessor.transform(X_input)
 
     repay_prob    = float(model.predict_proba(X_proc)[0][1])
 
-    # SHAP
-    explainer    = shap.TreeExplainer(model)
+    # SHAP — access underlying XGBoost model from calibrated wrapper
+    base_model = model.estimator if hasattr(model, "estimator") else model
+    explainer    = shap.TreeExplainer(base_model)
     shap_vals    = explainer.shap_values(X_proc)[0]
     narrative_str, narrative_steps = build_confidence_narrative(
         shap_vals, feature_names, X_proc[0], explainer.expected_value
@@ -383,21 +488,33 @@ if __name__ == "__main__":
 
     tier1 = {
         "dti": 12.5, "revol_util": 18.0, "pub_rec": 0, "annual_inc": 85000,
+        "debt_burden": round((12.5/100) * 85000 / 12, 2),
+        "credit_utilization_pressure": round(3200 / 85000, 3),
+        "has_public_record": 0, "high_dti_low_income": 0,
         "emp_length": 7, "open_acc": 8, "mort_acc": 1,
         "credit_history_years": 12.0, "revol_bal": 3200, "home_ownership": "MORTGAGE"
     }
     tier2 = {
         "dti": 13.0, "revol_util": 38.0, "pub_rec": 0, "annual_inc": 78000,
+        "debt_burden": round((13.0/100) * 78000 / 12, 2),
+        "credit_utilization_pressure": round(9000 / 78000, 3),
+        "has_public_record": 0, "high_dti_low_income": 0,
         "emp_length": 7, "open_acc": 9, "mort_acc": 2,
         "credit_history_years": 16.0, "revol_bal": 9000, "home_ownership": "MORTGAGE"
     }
     tier3 = {
         "dti": 19.0, "revol_util": 58.0, "pub_rec": 0, "annual_inc": 55000,
+        "debt_burden": round((19.0/100) * 55000 / 12, 2),
+        "credit_utilization_pressure": round(13000 / 55000, 3),
+        "has_public_record": 0, "high_dti_low_income": 0,
         "emp_length": 4, "open_acc": 11, "mort_acc": 0,
         "credit_history_years": 10.0, "revol_bal": 13000, "home_ownership": "RENT"
     }
     tier4 = {
         "dti": 38.0, "revol_util": 82.0, "pub_rec": 2, "annual_inc": 32000,
+        "debt_burden": round((38.0/100) * 32000 / 12, 2),
+        "credit_utilization_pressure": round(18000 / 32000, 3),
+        "has_public_record": 1, "high_dti_low_income": 1,
         "emp_length": 1, "open_acc": 14, "mort_acc": 0,
         "credit_history_years": 3.0, "revol_bal": 18000, "home_ownership": "RENT"
     }

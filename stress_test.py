@@ -6,120 +6,122 @@ from xgboost_predict import decide
 # 33% clearly should be DECLINED (risky profiles)
 # 33% ambiguous (borderline — reasonable people could disagree)
 
-applicants = [
+def add_engineered(a):
+    """Compute engineered features from raw features."""
+    a["debt_burden"]                 = round((a["dti"]/100) * a["annual_inc"] / 12, 2)
+    a["credit_utilization_pressure"] = round(a["revol_bal"] / (a["annual_inc"] + 1), 3)
+    a["has_public_record"]           = 1 if a["pub_rec"] > 0 else 0
+    a["high_dti_low_income"]         = 1 if a["dti"] > 30 and a["annual_inc"] < 50000 else 0
+    return a
 
-    # ── CLEARLY APPROVED ─────────────────────────────────────────────────────
+applicants = [
     {
-        "label":    "Strong #1 — High income, low debt, long history",
+        "label": "Strong #1 — High income, low debt, long history",
         "expected": "APPROVED",
-        "data": {
+        "data": add_engineered({
             "dti": 10.0, "revol_util": 15.0, "pub_rec": 0, "annual_inc": 120000,
             "emp_length": 10, "open_acc": 7, "mort_acc": 2,
             "credit_history_years": 18.0, "revol_bal": 4000, "home_ownership": "MORTGAGE"
-        }
+        })
     },
     {
-        "label":    "Strong #2 — Solid middle income, very low utilisation",
+        "label": "Strong #2 — Solid middle income, very low utilisation",
         "expected": "APPROVED",
-        "data": {
+        "data": add_engineered({
             "dti": 8.0, "revol_util": 10.0, "pub_rec": 0, "annual_inc": 75000,
             "emp_length": 8, "open_acc": 6, "mort_acc": 1,
             "credit_history_years": 14.0, "revol_bal": 2000, "home_ownership": "MORTGAGE"
-        }
+        })
     },
     {
-        "label":    "Strong #3 — Own home, zero public records, long employment",
+        "label": "Strong #3 — Own home, zero public records, long employment",
         "expected": "APPROVED",
-        "data": {
+        "data": add_engineered({
             "dti": 12.0, "revol_util": 22.0, "pub_rec": 0, "annual_inc": 95000,
             "emp_length": 10, "open_acc": 9, "mort_acc": 1,
             "credit_history_years": 20.0, "revol_bal": 5000, "home_ownership": "OWN"
-        }
+        })
     },
     {
-        "label":    "Strong #4 — Very high income, moderate dti",
+        "label": "Strong #4 — Very high income, moderate dti",
         "expected": "APPROVED",
-        "data": {
+        "data": add_engineered({
             "dti": 18.0, "revol_util": 25.0, "pub_rec": 0, "annual_inc": 200000,
             "emp_length": 10, "open_acc": 12, "mort_acc": 3,
             "credit_history_years": 22.0, "revol_bal": 8000, "home_ownership": "MORTGAGE"
-        }
+        })
     },
-
-    # ── CLEARLY DECLINED ──────────────────────────────────────────────────────
     {
-        "label":    "Risky #1 — High dti, maxed credit, bankruptcy",
+        "label": "Risky #1 — High dti, maxed credit, bankruptcy",
         "expected": "DECLINED",
-        "data": {
+        "data": add_engineered({
             "dti": 42.0, "revol_util": 90.0, "pub_rec": 3, "annual_inc": 28000,
             "emp_length": 0, "open_acc": 16, "mort_acc": 0,
             "credit_history_years": 2.0, "revol_bal": 22000, "home_ownership": "RENT"
-        }
+        })
     },
     {
-        "label":    "Risky #2 — Very low income, high utilisation, public records",
+        "label": "Risky #2 — Very low income, high utilisation, public records",
         "expected": "DECLINED",
-        "data": {
+        "data": add_engineered({
             "dti": 38.0, "revol_util": 85.0, "pub_rec": 2, "annual_inc": 22000,
             "emp_length": 1, "open_acc": 14, "mort_acc": 0,
             "credit_history_years": 3.0, "revol_bal": 18000, "home_ownership": "RENT"
-        }
+        })
     },
     {
-        "label":    "Risky #3 — Maxed out credit, short history, renting",
+        "label": "Risky #3 — Maxed out credit, short history, renting",
         "expected": "DECLINED",
-        "data": {
+        "data": add_engineered({
             "dti": 35.0, "revol_util": 92.0, "pub_rec": 1, "annual_inc": 35000,
             "emp_length": 2, "open_acc": 18, "mort_acc": 0,
             "credit_history_years": 4.0, "revol_bal": 25000, "home_ownership": "RENT"
-        }
+        })
     },
     {
-        "label":    "Risky #4 — High debt burden across the board",
+        "label": "Risky #4 — High debt burden across the board",
         "expected": "DECLINED",
-        "data": {
+        "data": add_engineered({
             "dti": 45.0, "revol_util": 78.0, "pub_rec": 2, "annual_inc": 30000,
             "emp_length": 0, "open_acc": 20, "mort_acc": 0,
             "credit_history_years": 1.5, "revol_bal": 30000, "home_ownership": "RENT"
-        }
+        })
     },
-
-    # ── AMBIGUOUS ─────────────────────────────────────────────────────────────
     {
-        "label":    "Ambiguous #1 — Good income but high utilisation",
+        "label": "Ambiguous #1 — Good income but high utilisation",
         "expected": "AMBIGUOUS",
-        "data": {
+        "data": add_engineered({
             "dti": 22.0, "revol_util": 68.0, "pub_rec": 0, "annual_inc": 80000,
             "emp_length": 6, "open_acc": 8, "mort_acc": 1,
             "credit_history_years": 10.0, "revol_bal": 12000, "home_ownership": "MORTGAGE"
-        }
+        })
     },
     {
-        "label":    "Ambiguous #2 — Low income but clean record",
+        "label": "Ambiguous #2 — Low income but clean record",
         "expected": "AMBIGUOUS",
-        "data": {
+        "data": add_engineered({
             "dti": 25.0, "revol_util": 40.0, "pub_rec": 0, "annual_inc": 38000,
             "emp_length": 4, "open_acc": 5, "mort_acc": 0,
             "credit_history_years": 7.0, "revol_bal": 5000, "home_ownership": "RENT"
-        }
+        })
     },
     {
-        "label":    "Ambiguous #3 — One public record but otherwise solid",
+        "label": "Ambiguous #3 — One public record but otherwise solid",
         "expected": "AMBIGUOUS",
-        "data": {
+        "data": add_engineered({
             "dti": 20.0, "revol_util": 45.0, "pub_rec": 1, "annual_inc": 70000,
             "emp_length": 7, "open_acc": 7, "mort_acc": 1,
             "credit_history_years": 12.0, "revol_bal": 7000, "home_ownership": "MORTGAGE"
-        }
+        })
     },
     {
-        "label":    "Ambiguous #4 — Short employment but high income",
+        "label": "Ambiguous #4 — Short employment but high income",
         "expected": "AMBIGUOUS",
-        "data": {
+        "data": add_engineered({
             "dti": 28.0, "revol_util": 55.0, "pub_rec": 0, "annual_inc": 110000,
             "emp_length": 1, "open_acc": 10, "mort_acc": 0,
             "credit_history_years": 8.0, "revol_bal": 9000, "home_ownership": "RENT"
-        }
+        })
     },
 ]
 
