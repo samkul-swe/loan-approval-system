@@ -6,6 +6,7 @@ import shap
 import uuid
 from datetime import datetime
 from borderline_budget import try_approve_borderline, print_budget_status
+from delta_lake_store import write_decision
 
 # ── 1. LOAD MODEL ─────────────────────────────────────────────────────────────
 with open("model_registry/latest.json") as f:
@@ -478,6 +479,13 @@ def decide(applicant: dict, applicant_id: str = None) -> dict:
         print(f"\n  Decline Reasons:")
         for i, r in enumerate(decision["decline_reasons"], 1):
             print(f"  {i}. {r}")
+
+    # ── LOG TO DELTA LAKE ─────────────────────────────────────────────────────
+    try:
+        write_decision(decision)
+    except Exception as e:
+        # Never let logging failure block a lending decision
+        print(f"Warning: Delta Lake logging failed — {e}")
 
     return decision
 

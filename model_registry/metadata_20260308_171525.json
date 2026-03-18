@@ -1,0 +1,29 @@
+{
+  "version": "20260308_171525",
+  "roc_auc": 0.9741,
+  "pr_auc": 0.9825,
+  "ks_stat": 0.8994,
+  "expected_cost": 304,
+  "best_iteration": 278,
+  "features": [
+    "dti",
+    "revol_util",
+    "pub_rec",
+    "annual_inc",
+    "debt_burden",
+    "credit_utilization_pressure",
+    "has_public_record",
+    "high_dti_low_income",
+    "emp_length",
+    "open_acc",
+    "mort_acc",
+    "credit_history_years",
+    "revol_bal",
+    "home_ownership"
+  ],
+  "train_size": 17102,
+  "test_size": 4276,
+  "n_defaulters": 10689,
+  "n_repaid_sampled": 10689,
+  "trained_at": "2026-03-08T17:15:25.953800"
+}

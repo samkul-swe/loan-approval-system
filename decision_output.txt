@@ -5,9 +5,9 @@
 #################################################################
 
 =================================================================
-  ID: 3a0829ce  |  Tier 3: Medium Okay
-  Decision: APPROVED   (Repay prob: 0.8664)  |  Distance score: 0.7470
-  Model version: 20260305_222037  |  2026-03-05T22:59:27.465845
+  ID: d0509635  |  Tier 1: Clear Good
+  Decision: APPROVED   (Repay prob: 0.8664)
+  Model version: 20260308_171525  |  2026-03-08T17:16:37.515379
 =================================================================
 
   Confidence Narrative:
@@ -32,18 +32,13 @@
   ------------------------- --------    ----------  -----------------------------------
   Final confidence                          100.0%
 
-  Approved as Tier 3 trial loan — $500 at 9% APR over 6 months. Budget remaining: $9,500.00
+  Offer: D — $5000 over 36 months at 19% APR
+  Monthly payment: $183.28
 
-  Distance from defaulter breakdown:
-  ✓ dti                       yours:      12.50  defaulter avg:      21.74
-  ✓ revol_util                yours:      18.00  defaulter avg:      63.30
-  ✓ pub_rec                   yours:       0.00  defaulter avg:       0.28
-  ✓ annual_inc                yours:   85000.00  defaulter avg:   57000.00
-  ✓ emp_length                yours:       7.00  defaulter avg:       5.68
-  ✓ open_acc                  yours:       8.00  defaulter avg:      11.53
-  ✗ mort_acc                  yours:       1.00  defaulter avg:       1.19
-  ✗ credit_history_years      yours:      12.00  defaulter avg:      20.50
-  ✓ revol_bal                 yours:    3200.00  defaulter avg:   14917.00
+Decision logged: d0509635 → APPROVED
+  Repay prob: 0.87  |  Headroom: $1948/mo
+  Plans evaluated: A($86)✓, B($89)✓, C($121)✓, D($183)✓
+  Selected: Offer D selected based on repay probability tier
 
 
 #################################################################
@@ -51,9 +46,9 @@
 #################################################################
 
 =================================================================
-  ID: bb557991  |  Tier 1: Clear Good
+  ID: dacf25a7  |  Tier 1: Clear Good
   Decision: APPROVED   (Repay prob: 0.9341)
-  Model version: 20260305_222037  |  2026-03-05T22:59:27.556405
+  Model version: 20260308_171525  |  2026-03-08T17:16:37.814962
 =================================================================
 
   Confidence Narrative:
@@ -81,15 +76,20 @@
   Offer: D — $5000 over 36 months at 19% APR
   Monthly payment: $183.28
 
+Decision logged: dacf25a7 → APPROVED
+  Repay prob: 0.93  |  Headroom: $1755/mo
+  Plans evaluated: A($86)✓, B($89)✓, C($121)✓, D($183)✓
+  Selected: Offer D selected based on repay probability tier
+
 
 #################################################################
   Tier 3 — Medium Okay
 #################################################################
 
 =================================================================
-  ID: e6975e90  |  Tier 3: Medium Okay
-  Decision: APPROVED   (Repay prob: 0.8353)  |  Distance score: 0.5235
-  Model version: 20260305_222037  |  2026-03-05T22:59:27.610027
+  ID: 37ae0d90  |  Tier 1: Clear Good
+  Decision: APPROVED   (Repay prob: 0.8353)
+  Model version: 20260308_171525  |  2026-03-08T17:16:37.917053
 =================================================================
 
   Confidence Narrative:
@@ -114,18 +114,13 @@
   ------------------------- --------    ----------  -----------------------------------
   Final confidence                           99.9%
 
-  Approved as Tier 3 trial loan — $350 at 9% APR over 6 months. Budget remaining: $9,150.00
+  Offer: C — $2500 over 24 months at 15% APR
+  Monthly payment: $121.22
 
-  Distance from defaulter breakdown:
-  ✓ dti                       yours:      19.00  defaulter avg:      21.74
-  ✓ revol_util                yours:      58.00  defaulter avg:      63.30
-  ✓ pub_rec                   yours:       0.00  defaulter avg:       0.28
-  ✗ annual_inc                yours:   55000.00  defaulter avg:   57000.00
-  ✗ emp_length                yours:       4.00  defaulter avg:       5.68
-  ✓ open_acc                  yours:      11.00  defaulter avg:      11.53
-  ✗ mort_acc                  yours:       0.00  defaulter avg:       1.19
-  ✗ credit_history_years      yours:      10.00  defaulter avg:      20.50
-  ✓ revol_bal                 yours:   13000.00  defaulter avg:   14917.00
+Decision logged: 37ae0d90 → APPROVED
+  Repay prob: 0.84  |  Headroom: $962/mo
+  Plans evaluated: A($86)✓, B($89)✓, C($121)✓, D($183)✓
+  Selected: Offer C selected based on repay probability tier
 
 
 #################################################################
@@ -133,9 +128,9 @@
 #################################################################
 
 =================================================================
-  ID: e2bc2383  |  Tier 4: Clear Bad
+  ID: 00365ed5  |  Tier 4: Clear Bad
   Decision: DECLINED   (Repay prob: 0.5200)  |  Distance score: 0.2146
-  Model version: 20260305_222037  |  2026-03-05T22:59:27.674088
+  Model version: 20260308_171525  |  2026-03-08T17:16:38.021438
 =================================================================
 
   Confidence Narrative:
@@ -165,6 +160,11 @@
   2. 2 derogatory public record(s) — negative financial history
   3. Short credit history of 3.0 years — limited track record
 
+Decision logged: 00365ed5 → DECLINED
+  Repay prob: 0.52  |  Headroom: $53/mo
+  Plans evaluated: A($86)✗, B($89)✗, C($121)✗, D($183)✗
+  Min plan path: A minimum loan of $300 may be possible if you: reduce debt-to-income ratio below 35% (currently 38.0%) and reduce credit utilisation below 80% (currently 82.0%) and improve overall credit profile
+
 
 #################################################################
   Budget Status
@@ -172,10 +172,10 @@
 
 ── Tier 3 Budget Status ──
 Total budget:       $ 10,000.00
-Deployed:           $    850.00
-Remaining:          $  9,150.00
+Deployed:           $      0.00
+Remaining:          $ 10,000.00
 Repaid so far:      $      0.00
 Defaulted so far:   $      0.00
-Approved:                    2
+Approved:                    0
 On waitlist:                 0
-Last updated:       2026-03-05T22:59:27.610221
+Last updated:       2026-03-08T17:16:37.411455

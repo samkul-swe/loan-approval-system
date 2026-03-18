@@ -1,82 +1,9 @@
 {
   "total_budget": 10000.0,
-  "amount_deployed": 1200.0,
+  "amount_deployed": 0.0,
   "amount_repaid": 0.0,
   "amount_defaulted": 0.0,
   "waitlist": [],
-  "approved": [
-    {
-      "applicant_id": "3a0829ce",
-      "applicant": {
-        "dti": 12.5,
-        "revol_util": 18.0,
-        "pub_rec": 0,
-        "annual_inc": 85000,
-        "debt_burden": 885.42,
-        "credit_utilization_pressure": 0.038,
-        "has_public_record": 0,
-        "high_dti_low_income": 0,
-        "emp_length": 7,
-        "open_acc": 8,
-        "mort_acc": 1,
-        "credit_history_years": 12.0,
-        "revol_bal": 3200,
-        "home_ownership": "MORTGAGE"
-      },
-      "distance_score": 0.747,
-      "main_prob": 0.8664,
-      "amount": 500.0,
-      "timestamp": "2026-03-05T22:59:27.466030",
-      "status": "APPROVED"
-    },
-    {
-      "applicant_id": "e6975e90",
-      "applicant": {
-        "dti": 19.0,
-        "revol_util": 58.0,
-        "pub_rec": 0,
-        "annual_inc": 55000,
-        "debt_burden": 870.83,
-        "credit_utilization_pressure": 0.236,
-        "has_public_record": 0,
-        "high_dti_low_income": 0,
-        "emp_length": 4,
-        "open_acc": 11,
-        "mort_acc": 0,
-        "credit_history_years": 10.0,
-        "revol_bal": 13000,
-        "home_ownership": "RENT"
-      },
-      "distance_score": 0.5235,
-      "main_prob": 0.8353,
-      "amount": 350.0,
-      "timestamp": "2026-03-05T22:59:27.610215",
-      "status": "APPROVED"
-    },
-    {
-      "applicant_id": "2d33a782",
-      "applicant": {
-        "dti": 28.0,
-        "revol_util": 55.0,
-        "pub_rec": 0,
-        "annual_inc": 110000,
-        "emp_length": 1,
-        "open_acc": 10,
-        "mort_acc": 0,
-        "credit_history_years": 8.0,
-        "revol_bal": 9000,
-        "home_ownership": "RENT",
-        "debt_burden": 2566.67,
-        "credit_utilization_pressure": 0.082,
-        "has_public_record": 0,
-        "high_dti_low_income": 0
-      },
-      "distance_score": 0.5662,
-      "main_prob": 0.7107,
-      "amount": 350.0,
-      "timestamp": "2026-03-06T00:06:38.448314",
-      "status": "APPROVED"
-    }
-  ],
-  "last_updated": "2026-03-06T00:06:38.448325"
+  "approved": [],
+  "last_updated": "2026-03-08T17:16:37.411455"
 }
